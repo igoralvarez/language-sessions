@@ -17,22 +17,22 @@ text = "reassigned"; // [ts] Cannot assign 'text' because it is a constant or a 
 
 // TIPOS BÁSICOS
 
-// -Boolean-
+// *** Boolean
 const fake: boolean = true;
 
-// -Number-
+// *** Number
 const integer: number = 13;     // 13
 const float: number = 13.13;    // 13.13
 const hex: number = 0xd;        // 13
 const binary: number = 0b1101;  // 13
 const octal: number = 0o15;     // 13
 
-// -String-
+// *** String
 let phrase: string = "¿Qué tiempo hace?";
 phrase = 'No muy bueno';
 phrase = `Dan lluvia en ${city}`;
 
-// -Array-
+// *** Array
 // Se puede anotar su tipo con 2 variantes, los corchetes [] para expresar
 // array o mediante el tipo genérico Array especializado al tipo concreto de
 // array.
@@ -42,13 +42,13 @@ words.push("hello");
 words.push("world");
 words.push({}); // [ts] Argument of type '{}' is not assignable to parameter of type 'string'
 
-// -Tuple-
+// *** Tuple
 // Array con tipos heterogéneos
 const quantity: [number, string] = [5, "pieces"];
 console.log(quantity[1].toUpperCase());
 console.log(quantity[0].toUpperCase()); // [ts] Property 'toUpperCase' does not exists in type 'number'
 
-// -Enum-
+// *** Enum
 // Nuevo tipo en TypeScript para enumerados. Los enumerados no son más que
 // alias más amigables para tipos numéricos. Internamente, por tanto, almacenamos
 // un entero por defecto:
@@ -86,7 +86,7 @@ enum Release {
   NewYearPackage = 2.0
 }
 const rel: Release = Release.ImprovedSupport;
-console.log(rel);
+console.log(rel); // 1.4
 const relName: string = Release[1.4];
 const relName1: string = Release[Release.ImprovedSupport];
 console.log(relName);  // ImprovedSupport
@@ -131,7 +131,54 @@ const medName: string = MediaTypes[MediaTypes.JSON]; // undefined
   MediaTypes["PLAIN"] = "OTHER"; // [!] Hemos sobreescrito la propiedad "PLAIN" de (1)
 */
 
-// -Any-
+
+
+// *** Void
+// Es justo lo contrario de "any", la ausencia de cualquier tipo. Mientras
+// que "any" puede ser cualquier cosa, "void" no puede ser nada. Su uso más
+// habitual es como valor de retorno en funciones que no devuelven nada.
+function noReturn(): void { console.log("I am not going to return anything") }
+
+// Void es equivalente a undefined
+const notAssigned: void = undefined;
+
+// [!] Veremos más en el capítulo de funciones.
+
+// *** null y undefined
+// Aunque en TS existen tanto "null" como "undefined" como tipos propios e
+// independientes, no tienen mucha utilidad como tal:
+const u: undefined = undefined; // Sólo puedo asignarle undefined o null.
+const n: null = null; // Sólo puedo asignarle null o undefined.
+
+// Sin embargo, si que se utilizan mucho como sub-tipos del resto de tipos,
+//  es decir, que podemos asignarlos a cualquier otro tipo:
+const nullNumb: number = null;
+const undefString: string = undefined;
+let whatever: any = undefined;
+whatever = null;
+
+// *** Object
+// Representa a los tipos custom, aquellos que no son primitivos. Es decir,
+// todo lo que no sea "number", "string", "boolean", "null" o "undefined".
+const obj: object = {};
+
+// *** Never
+// Representa a valores que nunca van a ocurrir. Es un tipo abstracto útil
+// para tipar condiciones como las siguientes:
+
+// Nunca se alcanza el retorno, por tanto su tipo es never.
+const throwError = (message: string): never => {
+  throw new Error(message);
+}
+
+// Nunca se alcanza el retorno, por tanto su tipo es never.
+const neverEndingFunction = (): never => {
+  while (true) {} // Infinite loop.
+}
+
+// Never suele ser empleado internamente por TS para indicar algun tipo de error.
+
+// *** Any
 // ¿Y si no sabemos que tipo es? Puede haber datos dinámicos que a priori
 // no sepamos su tipo, imaginemos datos que vienen de servidor;
 const getServerData = () => { /*¿?*/ };
@@ -150,35 +197,6 @@ falsyValues.push('');
 // de tipos cuando queramos. Puede ser útil si sabemos lo que hacemos pero
 // también abrimos la puerta a posibles erroes. Es lo más parecido a volver
 // a vanilla JS.
-
-// Void
-// Es justo lo contrario de "any", la ausencia de cualquier tipo. Mientras
-// que "any" puede ser cualquier cosa, "void" no puede ser nada. Su uso más
-// habitual es como valor de retorno en funciones que no devuelven nada.
-function noReturn(): void { console.log("I am not going to return anything") }
-
-// Void es equivalente a undefined
-const notAssigned: void = undefined;
-
-// [!] Veremos más en el capítulo de funciones.
-
-// null y undefined
-// Aunque en TS existen tanto "null" como "undefined" como tipos propios e
-// independientes, no tienen mucha utilidad como tal:
-const u: undefined = undefined; // Sólo puedo asignarle undefined o null.
-const n: null = null; // Sólo puedo asignarle null o undefined.
-
-// Sin embargo, si que se utilizan mucho como sub-tipos del resto de tipos,
-//  es decir, que podemos asignarlos a cualquier otro tipo:
-const nullNumb: number = null;
-const undefString: string = undefined;
-let whatever: any = undefined;
-whatever = null;
-
-// Object
-// Representa a los tipos custom, aquellos que no son primitivos. Es decir,
-// todo lo que no sea "number", "string", "boolean", "null" o "undefined".
-const obj: object = {};
 
 
 // TYPE ASSERTION o ASEVERACIÓN DE TIPOS
